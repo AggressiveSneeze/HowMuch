@@ -14,6 +14,7 @@ var cur_word = /\w+/
 
 var final_reg = /^([+-]?\d*([,.e]?\d*)*\s\w+\s)*$/
 
+//http://openexchangerates.github.io/money.js/#fx.rates
 
 //ideal case:
 
@@ -59,6 +60,9 @@ flow:
 **/
 
 
+
+var fx=require('money');
+//require(["money"], function(fx) { /* ... */ });
 //basic test map:
 
 var standards = {
@@ -120,10 +124,23 @@ function contains(a, obj) {
     }
     return false;
 }
+//assuming given is a currency code.
+//amounts is a map with keys of codes, values of number amount of this currency.
+function sum_to_given_currency(given,amounts) {
+
+	var sum = 0.0;
+	for (var currency in amounts) {
+		if (amounts.hasOwnProperty(currency)) {
+			sum+=fx(amounts[currency]).from(currency).to(given);
+		}
+	}
+	return sum;
+}
 
 // var obj = {'aussie dollars': 25, 
 // 			'baht':350};
 
-var test_string = '125.12321 rupees + 278,1231.123 aussie dollars + 413 usd';
-
-console.log(currency_code_mapper(input_parser(test_string)));			
+var test_string = '125.12321 rupees + 21.123 aussie dollars + 413 usd';
+a=currency_code_mapper(input_parser(test_string))
+console.log(a);
+console.log(sum_to_given_currency('AUD',a));			
