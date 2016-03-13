@@ -64,19 +64,29 @@ flow:
 var standards = {
 	'AUD' : ['aussie dollars', 'australian dollars', 'dollaroos', 'aud'],
 	'USD' : ['dollars','us dollars', 'usd'],
-	'THB' : ['baht']
+	'THB' : ['baht'],
+	'INR' : ['rupees']
 
 }
 
 function input_parser(input) {
-	output = {};
+	var output = {};
+	var info;
 	//not 
-	reg = /^([+-]?\d*([,.e]?\d*)*\s\w+\s)*$/
-	matches=reg.exec(input);
-
+	//reg = /^([+-]?\d*([,.e]?\d*)*\s\w+\s)*$/
+	//matches=reg.exec(input);
+	//TODO: handle commas.
+	var basic_reg = /(\d+\.?\d+)\s(.*)/;
 	//somehow cycle through matches and get the output array/map as required.
 
+	var amounts = input.split('+');
+	console.log('amounts is: ' + amounts);
 
+	for (var i=0; i<amounts.length; i++) {
+		info=basic_reg.exec(amounts[i].trim())
+		output[info[2]]=info[1];
+		//key is dirty currency name, value is amount.
+	}
 	return output;
 }
 
@@ -85,7 +95,7 @@ function input_parser(input) {
 //input is the map of unparsed/'dirty' currency names to their amounts
 //output is map of clean codes to their amounts.
 function currency_code_mapper(unparsed_currency_map) {
-	output = {};
+	var output = {};
 	for(var nickname in unparsed_currency_map) {
 		if (unparsed_currency_map.hasOwnProperty(nickname)) {
 			for (var code in standards) {
@@ -111,7 +121,9 @@ function contains(a, obj) {
     return false;
 }
 
-var obj = {'aussie dollars': 25, 
-			'baht':350};
+// var obj = {'aussie dollars': 25, 
+// 			'baht':350};
 
-console.log(currency_code_mapper(obj));			
+var test_string = '125.12321 rupees + 278,1231.123 aussie dollars + 413 usd';
+
+console.log(currency_code_mapper(input_parser(test_string)));			
