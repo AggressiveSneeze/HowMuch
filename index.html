@@ -3,9 +3,26 @@
 <HTML>
 	<HEAD>
 		<TITLE>HowMuch</TITLE>
+		<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<LINK rel='stylesheet' type='text/css' href='style.css'></LINK>
 	</HEAD>
 	<BODY>
+	<div class="container">
+		<form name='form' onsubmit='do_stuff()'>
+			<div class="form-group">
+				<label for="inputCurrency">Input</label>
+		    	<input type="text" class="form-control" id="inputCurrency" placeholder="20 aussie dollars + 5 usd" />
+		  	</div>
+		  	<div class= "form-group">
+				<select id='outputCurrency' class="form-control">
+
+				</select>
+		  	</div>
+		  	<div class="converted-amount"></div>
+			<!--<input type='submit' value='convert' />-->
+		</form>
+	</div>
 		<script src="node_modules/money/money.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<SCRIPT src='currency.js' type="text/javascript"></SCRIPT>
