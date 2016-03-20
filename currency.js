@@ -4,15 +4,15 @@
 
 //https://www.npmjs.com/package/money
 
-var	decimal_num = /^[-+]?\d+(\.\d+)?$/ ;
+//var	decimal_num = /^[-+]?\d+(\.\d+)?$/ ;
 
-var any_num = /^[+-]?\d*([,.e]?\d*)*$/ ;
+//var any_num = /^[+-]?\d*([,.e]?\d*)*$/ ;
 
-var cur_word = /\w+/
+//var cur_word = /\w+/
  
 //(any num \s \w*)*  
 
-var final_reg = /^([+-]?\d*([,.e]?\d*)*\s\w+\s)*$/
+//var final_reg = /^([+-]?\d*([,.e]?\d*)*\s\w+\s)*$/
 
 //http://openexchangerates.github.io/money.js/#fx.rates
 
@@ -29,41 +29,21 @@ var final_reg = /^([+-]?\d*([,.e]?\d*)*\s\w+\s)*$/
 //Currency codes:
 //https://en.wikipedia.org/wiki/ISO_4217#Active_codes
 
+//var fx=require('money');
+//var $= require('jquery');
+//var http=require('http');
+generate_form();
+
+function generate_form() {
+	txt="<form name='form' onsubmit='do_stuff()'>";
+	txt+="Input: <input type = 'text' name='input'>";
+	txt+="Output Currency: <input type ='text' name='output'>";
+	txt+="<input type='submit' value='submit'";
+	txt+="</form>";
+	$("body").append(txt);
+}
 
 
-// {
-// 	AUD: ['aussie dollars', 'possible names]
-
-// }
-
-
-// 150AUD 
-
-
-// 128
-
-
-
-/**
-
-flow:
-
-*input string of '150 rupees + ...'
-*parse and break up into map of currency to name
-*parse name into the map of known names for each currency code
-*update map/make new map
-*exit/continue gracefully at this point if there wasn't a match for something
-*now we have a map with (code: amount)*
-*Convert to given currency on a running sum and output.
-
-
-**/
-
-
-
-var fx=require('money');
-//require(["money"], function(fx) { /* ... */ });
-//basic test map:
 
 var standards = {
 	'AUD' : ['aussie dollars', 'australian dollars', 'dollaroos', 'aud'],
@@ -137,10 +117,36 @@ function sum_to_given_currency(given,amounts) {
 	return sum;
 }
 
-// var obj = {'aussie dollars': 25, 
-// 			'baht':350};
+function runner () {
+	var test_string = '125.12321 rupees + 21.123 aussie dollars + 413 usd';
+	//test_string = '123 usd';
+	a=currency_code_mapper(input_parser(test_string))
+	console.log('this is a');
+	console.log(a);
+	console.log('final');
+	console.log(sum_to_given_currency('AUD',a));
+}	
 
-var test_string = '125.12321 rupees + 21.123 aussie dollars + 413 usd';
-a=currency_code_mapper(input_parser(test_string))
-console.log(a);
-console.log(sum_to_given_currency('AUD',a));			
+//var obj = {'aussie dollars': 25, 
+//			'baht':350};
+function do_stuff () {
+	console.log('here123');
+	var url = 'http://openexchangerates.org/api/latest.json?app_id=0be3bc96f6a547909684a9f767d48793';
+	http.get(url,function(res) {
+		var body = '';
+		res.on('data',function(chunk) {
+			body+=chunk;
+		});
+
+		res.on('end',function() {
+			var response=JSON.parse(body);
+			fx.rates=response.rates;
+			fx.base=response.base;
+			console.log('got a response: ', response);
+			runner();
+		});
+	}).on('error',function(e){
+		console.log('got an error: ',e);
+	});
+}
+//setTimeout(runner,500);
